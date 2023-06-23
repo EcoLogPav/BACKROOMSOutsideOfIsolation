@@ -14,7 +14,7 @@ public class Pause : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape)&&!Inventory._isInventoryOn)
         {
             _isPaused = !_isPaused;
             PauseCheck();
@@ -45,8 +45,7 @@ public class Pause : MonoBehaviourPunCallbacks
     public void Exit()
     {
         PhotonNetwork.LeaveRoom();
-       // SceneManager.LoadScene("LoadScene");
-        PhotonNetwork.LoadLevel("MainMenu");
+        PhotonNetwork.LoadLevel("LoadScene");
     }
    
 }

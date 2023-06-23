@@ -1,8 +1,4 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using TMPro;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -23,7 +19,7 @@ public class PlayerMove : MonoBehaviour
        
     }
 
-    void FixedUpdate()
+    void Update()
     {
       
         MovementLogic();
@@ -48,30 +44,35 @@ public class PlayerMove : MonoBehaviour
     {
         if (view.IsMine)
         {
-            float moveHorizontal = Input.GetAxis("Horizontal");
-
-            float moveVertical = Input.GetAxis("Vertical");
-
-            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-
-            transform.Translate(movement * speed * Time.fixedDeltaTime);
+            if (Input.GetKey(KeyCode.W))
+            {
+                transform.localPosition += speed * transform.forward * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                transform.localPosition += speed * -transform.forward * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                transform.localPosition += speed * -transform.right * Time.deltaTime;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                transform.localPosition += speed * transform.right * Time.deltaTime;
+            }
+            
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
-                _isMoving = true;
+                _isMoving=true;
+                animator.SetBool("_isWalking", true);
             }
             else
             {
-                _isMoving = false;
+                _isMoving=false;
+                animator.SetBool("_isWalking", false);
             }
            
-            if (_isMoving)
-            {
-                animator.SetBool("_IsWalking", true);
-            }
-            else
-            {
-                animator.SetBool("_IsWalking", false);
-            }
+
         }
     }
 

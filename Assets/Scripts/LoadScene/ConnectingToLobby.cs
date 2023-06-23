@@ -9,12 +9,17 @@ public class ConnectingToLobby : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.ConnectToRegion(region);
+       
     }
 
     // Update is called once per frame
     public override void OnConnectedToMaster()
     {
-   //     PhotonNetwork.JoinLobby();
+        if (!PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.JoinLobby();
+        }
+       
         SceneManager.LoadScene("MainMenu");
         Debug.Log("вы подключенны к мастер серверу");
     }

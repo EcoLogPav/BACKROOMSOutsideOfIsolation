@@ -7,35 +7,39 @@ using Photon.Realtime;
 
 public class PlayerSpawn : MonoBehaviour
 {
-    [SerializeField] private Camera SearchPlayer;
+    [SerializeField] private GameObject MasterStartUI;
+    [SerializeField] private GameObject OtherStartUI;
+    [SerializeField] private GameObject StartUI;
     private PhotonView view;
-    private bool _IsGameStarted=false;
   
    
     void Start()
     {
-        view=GetComponent<PhotonView>();
-
+        PhotonNetwork.JoinLobby();
+        view = GetComponent<PhotonView>();
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            MasterStartUI.SetActive(true);
+        }
+        else
+        {
+            OtherStartUI.SetActive(true);
+        }
         
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K)&&!_IsGameStarted)
-        {
-            _IsGameStarted = true;
-            StartGame();
-        }
-    }
-    void StartGame()
-    {
       
-        view.RPC("StartGameTP", RpcTarget.All);
+    }
+    public void StartGame()
+    {
+        view.RPC("StartGameTP", RpcTarget.AllBuffered);
     }
     [PunRPC]
     public void StartGameTP()
     {
-        SearchPlayer.gameObject.SetActive(false);
-         PhotonNetwork.Instantiate("BIGAgent", new Vector3(Random.Range(13, 30), 1, Random.Range(6, 13)), Quaternion.identity);
+        StartUI.SetActive(false);
+        PhotonNetwork.Instantiate("Stranger", new Vector3(Random.Range(-10, 10), 1, Random.Range(-10, 10)), Quaternion.identity);
     }
 
 }

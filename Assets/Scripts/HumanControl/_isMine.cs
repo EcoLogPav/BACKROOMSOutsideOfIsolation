@@ -8,7 +8,7 @@ public class _isMine : MonoBehaviour
     [SerializeField] private GameObject Camera;
     [SerializeField] private Pause pause;
     [SerializeField] private PlayerCamera cameraMove;
-    [SerializeField] private PickUp PickUp;
+  //  [SerializeField] private PickUp PickUp;
     [SerializeField] private PlayerMove Move;
     [SerializeField] private GameObject PlayerBody;
 
@@ -21,7 +21,7 @@ public class _isMine : MonoBehaviour
             Camera.SetActive(false);
             pause.enabled = false;
             cameraMove.enabled = false;
-            PickUp.enabled = false;
+       //     PickUp.enabled = false;
             Move.enabled = false;
             
         }
