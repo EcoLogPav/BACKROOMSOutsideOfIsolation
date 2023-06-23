@@ -11,6 +11,7 @@ public class _isMine : MonoBehaviour
   //  [SerializeField] private PickUp PickUp;
     [SerializeField] private PlayerMove Move;
     [SerializeField] private GameObject PlayerBody;
+    [SerializeField] private Inventory inventory;
 
     private PhotonView view;
     void Start()
@@ -21,9 +22,9 @@ public class _isMine : MonoBehaviour
             Camera.SetActive(false);
             pause.enabled = false;
             cameraMove.enabled = false;
-       //     PickUp.enabled = false;
+       //   PickUp.enabled = false;
             Move.enabled = false;
-            
+            inventory.enabled = false;
         }
         else
         {

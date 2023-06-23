@@ -75,7 +75,7 @@ public class Inventory : MonoBehaviour
         int i = 0;
         while (!_isItemDrop)
         {
-            if (cells[i].sprite.name == pickUp.Items[pickUp.ItemID].name+"Sprite")
+            if (cells[i].sprite.name == pickUp.PrefubItems[pickUp.ItemID].name+"Sprite")
             {
                 cells[i].sprite=Null;
                 _isItemDrop = true;

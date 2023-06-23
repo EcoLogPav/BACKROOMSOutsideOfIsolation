@@ -1,6 +1,5 @@
 using UnityEngine;
 using Photon.Pun;
-using UnityEngine.SocialPlatforms;
 
 public class PickUp : MonoBehaviour
 {
@@ -10,11 +9,11 @@ public class PickUp : MonoBehaviour
     [SerializeField] private int RayDistance = 3;
     [SerializeField] private Transform Arm;
     public GameObject[]ArmItems=new GameObject[3];
-    public GameObject[]Items = new GameObject[3];
+    public GameObject[]PrefubItems = new GameObject[3];
+    public GameObject[]ArmItemForOtherPlayer = new GameObject[3];
     public static GameObject PickUpObj;
     [SerializeField] private float ThrowPower=500f;
     [SerializeField] private Animator humanAnimator;
-    [SerializeField] private GameObject ArmObject=null;
     private bool _isPick=false;
     public bool _isGravity = false;
     private PhotonView view;
@@ -69,7 +68,7 @@ public class PickUp : MonoBehaviour
                 humanAnimator.SetBool("_haveItem", false);//animation
                 humanAnimator.SetBool("_haveGun", false);
                 PutDownAllState();
-                PickUpObj = PhotonNetwork.Instantiate(Items[ItemID].name, Arm.position, Quaternion.identity);//clone
+                PickUpObj = PhotonNetwork.Instantiate(PrefubItems[ItemID].name, Arm.position, Quaternion.identity);//clone
                 PickUpObj.name = PickUpObj.name.Replace("(Clone)", "").Trim(); ;
                 PickUpObj.transform.position = Arm.position;
                 PickUpObj.GetComponent<Rigidbody>().AddForce(transform.forward * ThrowPower);
@@ -106,60 +105,37 @@ public class PickUp : MonoBehaviour
     }
     public void PutDownAllState()
     {
-        Gun._isHaveGun = false;
-        ArmItems[ItemID].SetActive(false);
-            view.RPC("PutDownObject", RpcTarget.All, ItemID);
             _isPick = false;
+            Gun._isHaveGun = false;
+            ArmItems[ItemID].SetActive(false);
+            view.RPC("PutDownObject", RpcTarget.All,ArmItemForOtherPlayer[ItemID].GetComponent<PhotonView>().ViewID);
+            
     }
    public void PickUpAllState()
     {
         _isPick = true;
-        
         ArmItems[ItemID].SetActive(true);
-        ArmObject = PhotonNetwork.Instantiate(Items[ItemID].name + "ForArm", Arm.position,Quaternion.Euler( SetArmObjPos()));
-        //  ArmObject.SetActive(false);
+        view.RPC("PickUpObject", RpcTarget.AllBuffered, ArmItemForOtherPlayer[ItemID].GetComponent<PhotonView>().ViewID);
         view.RPC("DestroyObj", RpcTarget.AllBuffered, hit.collider.gameObject.GetComponent<PhotonView>().ViewID);
-        view.RPC("PickUpObject", RpcTarget.AllBuffered, Arm.GetComponent<PhotonView>().ViewID, ArmObject.GetComponent<PhotonView>().ViewID);
-      ArmObject.transform.eulerAngles = SetArmObjPos();
     }
-    public Vector3 SetArmObjPos()//+Object
-    {
-        Vector3 rotation= new Vector3(0,0,0);
-            if (_isPick)
-            {
-                switch (ItemID)
-                {
-                    case 0:
-                    rotation=    new Vector3(0, 0, 0);//+Object
-                        break;
-                    case 1:
-                    rotation = new Vector3(60, 100, -50);
-                        break;
-                    case 2:
-                    rotation = new Vector3(-1,130,-1);
-                    break;
-            }
-            }
-        Debug.Log(rotation);
-        return rotation;
+    
         
+    [PunRPC]
+    public void PickUpObject(int id)
+    {
         
-    }
-    [PunRPC]
-    public void PickUpObject( int ArmId,int ArmObjectId)
-    {
-
-            PhotonView.Find(ArmObjectId).transform.SetParent(PhotonView.Find(ArmId).transform);          
-    }
-
-    [PunRPC]
-    public void PutDownObject(int ItemID)
-    {
-        if (_isPick)
+        PhotonView.Find(id).gameObject.SetActive(true);
+        if (view.IsMine)
         {
-            PhotonNetwork.Destroy(ArmObject);
-            ArmObject = null;
+            PhotonView.Find(id).gameObject.SetActive(false);
         }
+         
+    }
+
+    [PunRPC]
+    public void PutDownObject(int id)
+    {
+        PhotonView.Find(id).gameObject.SetActive(false);
     }
     [PunRPC]
     public void DestroyObj(int id)

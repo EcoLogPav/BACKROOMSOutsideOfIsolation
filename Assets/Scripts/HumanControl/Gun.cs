@@ -26,7 +26,7 @@ public class Gun : MonoBehaviour
             {
                 animations.Play("PistolShot");
 
-                if (hit.collider.gameObject.name == "Cube")
+                if (hit.collider.gameObject.name == "Player")
                 {
                     PhotonNetwork.Destroy(hit.collider.gameObject);
 
