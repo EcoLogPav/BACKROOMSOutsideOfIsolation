@@ -13,7 +13,6 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     public TMP_InputField InputField;
     private string roomID;
     List<RoomInfo> allRoomsInfo = new List<RoomInfo>();
-    GameObject[] RoomsPages = new GameObject[15];
 
 
     public void CreateRoom()
@@ -43,7 +42,7 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
     }
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        foreach (GameObject pages in RoomsPages)
+     /*   foreach (GameObject pages in RoomsPages)
         {
             
             Destroy(pages);
@@ -56,6 +55,22 @@ public class MainMenuManager : MonoBehaviourPunCallbacks
                 
         }
         Debug.Log(roomList.Count);
-
+     */
+        foreach(RoomInfo info in roomList)
+        {
+            for(int i = 0;i<allRoomsInfo.Count;i++)
+            {
+                if (allRoomsInfo[i].masterClientId== info.masterClientId)
+                {
+                    return;
+                }
+            }
+            ListItem listItem = Instantiate(item, content);
+            if(listItem != null)
+            {
+                listItem.SetInfo(info);
+                allRoomsInfo.Add(info);
+            }
+        }
     }
 }

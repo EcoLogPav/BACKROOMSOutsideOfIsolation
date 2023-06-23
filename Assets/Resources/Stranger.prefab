@@ -4770,7 +4770,7 @@ MonoBehaviour:
   ArmItems:
   - {fileID: 800870554875705380}
   - {fileID: 8346354030778292997}
-  - {fileID: 8346354030778292997}
+  - {fileID: 6128021058190450188}
   Items:
   - {fileID: 8993141329453447823, guid: 08e11c95cb2ded14b94a4440a51c36a7, type: 3}
   - {fileID: 3883944760641308797, guid: cf13f0ffd4b3e9648af1fc583b63ec09, type: 3}
@@ -5419,6 +5419,40 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: -6629503220789259126, guid: a9fca3e94a23ee54bb220aafe4ff9949, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a9fca3e94a23ee54bb220aafe4ff9949, type: 3}
+--- !u!1 &6128021058190450188 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7175963546104318432, guid: a9fca3e94a23ee54bb220aafe4ff9949, type: 3}
+  m_PrefabInstance: {fileID: 3935370351877117932}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &8991525780575312396
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6128021058190450188}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: de4e51baffff0ae4b8d5095be74ce1d9, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &6735380249490469212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6128021058190450188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6ac1cacec6f7342a68ec57068e8eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCamera: {fileID: 4019004016859841764}
 --- !u!4 &6791650355919602870 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7556464579786773338, guid: a9fca3e94a23ee54bb220aafe4ff9949, type: 3}

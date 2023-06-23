@@ -27,7 +27,7 @@ public class PickUp : MonoBehaviour
     }
     void Update()
     {
-        SetArmObjPos();
+       // SetArmObjPos();
         if (view.IsMine)
         {
             if (Input.GetKeyDown(KeyCode.F) && _isPick == false&&Inventory.CountItems<6)
@@ -37,7 +37,8 @@ public class PickUp : MonoBehaviour
                 if (Physics.Raycast(ray, out hit, RayDistance))
                 {
                     if (hit.collider.gameObject.tag == "PickUpObject")
-                    {   
+                    {
+                        humanAnimator.SetBool("_haveItem", true);//animation
                         ItemID = SetID(hit);
                         PickUpAllState();
                         inventory.PlusToInventoryList();
@@ -52,6 +53,7 @@ public class PickUp : MonoBehaviour
                 {
                     if (hit.collider.gameObject.tag == "PickUpObject")
                     {
+                        humanAnimator.SetBool("_haveItem", true);//animation
                         PutDownAllState();
                         ItemID = SetID(hit);
                         PickUpAllState();
@@ -65,14 +67,15 @@ public class PickUp : MonoBehaviour
                 
                 Debug.Log(ItemID);
                 humanAnimator.SetBool("_haveItem", false);//animation
+                humanAnimator.SetBool("_haveGun", false);
                 PutDownAllState();
                 PickUpObj = PhotonNetwork.Instantiate(Items[ItemID].name, Arm.position, Quaternion.identity);//clone
                 PickUpObj.name = PickUpObj.name.Replace("(Clone)", "").Trim(); ;
                 PickUpObj.transform.position = Arm.position;
                 PickUpObj.GetComponent<Rigidbody>().AddForce(transform.forward * ThrowPower);
-                Debug.Log("----------1"+"1");
+                
                 inventory.MinusToInventoryList();
-                Debug.Log("----------2" + "2");
+               
 
             }
         }
@@ -89,7 +92,9 @@ public class PickUp : MonoBehaviour
             case "MedKit"://+Object
                 id = 1;
                 break;
-            case "pistol":
+            case "Pistol":
+                Gun._isHaveGun = true;
+                humanAnimator.SetBool("_haveGun", true);
                 id = 2;
                 break;
         }
@@ -101,35 +106,43 @@ public class PickUp : MonoBehaviour
     }
     public void PutDownAllState()
     {
-            ArmItems[ItemID].SetActive(false);
+        Gun._isHaveGun = false;
+        ArmItems[ItemID].SetActive(false);
             view.RPC("PutDownObject", RpcTarget.All, ItemID);
             _isPick = false;
     }
    public void PickUpAllState()
     {
         _isPick = true;
-        humanAnimator.SetBool("_haveItem", true);//animation
+        
         ArmItems[ItemID].SetActive(true);
-        ArmObject = PhotonNetwork.Instantiate(Items[ItemID].name + "ForArm", Arm.position, Quaternion.identity);
-        ArmObject.SetActive(false);
+        ArmObject = PhotonNetwork.Instantiate(Items[ItemID].name + "ForArm", Arm.position,Quaternion.Euler( SetArmObjPos()));
+        //  ArmObject.SetActive(false);
         view.RPC("DestroyObj", RpcTarget.AllBuffered, hit.collider.gameObject.GetComponent<PhotonView>().ViewID);
         view.RPC("PickUpObject", RpcTarget.AllBuffered, Arm.GetComponent<PhotonView>().ViewID, ArmObject.GetComponent<PhotonView>().ViewID);
+      ArmObject.transform.eulerAngles = SetArmObjPos();
     }
-    public void SetArmObjPos()//+Object
+    public Vector3 SetArmObjPos()//+Object
     {
-       
+        Vector3 rotation= new Vector3(0,0,0);
             if (_isPick)
             {
                 switch (ItemID)
                 {
                     case 0:
-                        ArmObject.transform.eulerAngles = new Vector3(0, 0, 0);//+Object
+                    rotation=    new Vector3(0, 0, 0);//+Object
                         break;
                     case 1:
-                        ArmObject.transform.eulerAngles = new Vector3(60, 100, -50);
+                    rotation = new Vector3(60, 100, -50);
                         break;
-                }
+                    case 2:
+                    rotation = new Vector3(-1,130,-1);
+                    break;
             }
+            }
+        Debug.Log(rotation);
+        return rotation;
+        
         
     }
     [PunRPC]
@@ -154,3 +167,4 @@ public class PickUp : MonoBehaviour
         PhotonView.Find(id).gameObject.SetActive(false);
     }
 }
+//159666
